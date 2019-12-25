@@ -1,0 +1,15 @@
+.vs/
+**/.vs/
+.vscode/
+**/.vscode/
+*._BACKUP*
+*.orig
+**/*.orig
+**/*._BACKUP*
+**/*.zip
+obj/
+bin/
+**/obj/
+**/bin/
+**/dist/
+**/node_modules/

@@ -1,0 +1,75 @@
+<h2>
+  Solicitud the Permiso
+</h2>
+
+<form class="needs-validation" novalidate autocomplete="off" name="solicitudForm" [formGroup]="solicitudForm"
+  (ngSubmit)="onSubmit(solicitudForm.value)">
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="nombreEmpleado">Nombres</label>
+      <input name="nombreEmpleado" formControlName="nombreEmpleado" class="form-control" type="text"
+        placeholder="Requerido" [ngClass]="{
+          'is-invalid':
+            (f.nombreEmpleado.dirty || f.nombreEmpleado.touched) &&
+            f.nombreEmpleado.invalid
+        }" />
+      <div class="invalid-feedback">
+        El nombre es necesario para la solicitud
+      </div>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="apellidosEmpleado">Apellidos</label>
+      <input class="form-control" id="apellidosEmpleado" name="apellidosEmpleado" [required]="true" type="text"
+        placeholder="Requerido" formControlName="apellidosEmpleado" [ngClass]="{
+          'is-invalid':
+            (f.apellidosEmpleado.dirty || f.apellidosEmpleado.touched) &&
+            f.apellidosEmpleado.invalid
+        }" />
+      <div class="invalid-feedback">
+        El apellido es necesario para la solicitud
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="tipoPermisoId">Tipo de Permiso</label>
+      <select class="custom-select" id="tipoPermisoId" name="tipoPermisoId" [required]="true"
+        formControlName="tipoPermisoId" [ngClass]="{
+          'is-invalid':
+            (f.tipoPermisoId.dirty || f.tipoPermisoId.touched) &&
+            f.tipoPermisoId.invalid
+        }">
+        <option value="">Seleccionar...</option>
+        <option *ngFor="let tipo of tipoPermisos" [value]="tipo.id">{{
+          tipo.descripcion
+        }}</option>
+      </select>
+      <div class="invalid-feedback">
+        Debes escoger un tipo de permiso
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-12 col-md-4 form-group">
+      <label for="fechaPermiso">Fecha</label>
+      <input class="form-control" id="fechaPermiso" name="fechaPermiso" [required]="true" type="text" bsDatepicker
+        placeholder="MM/dd/yyyy" formControlName="fechaPermiso" [ngClass]="{
+          'is-invalid':
+            (f.fechaPermiso.dirty || f.fechaPermiso.touched) &&
+            f.fechaPermiso.invalid
+        }" [bsConfig]="{ adaptivePosition: true, containerClass: 'theme-blue' }" />
+      <div class="invalid-feedback">
+        Seleccione una fecha
+      </div>
+    </div>
+  </div>
+
+  <hr class="mb-4" />
+  <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="solicitudForm?.invalid">
+    Solicitar Permiso
+  </button>
+</form>
+<hr class="mb-4" [hidden]="!loading" />
+<div class="alert alert-info" role="alert" [hidden]="!loading">
+  Estamos procesando su solicitud, espere un momento por favor...
+</div>
