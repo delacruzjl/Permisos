@@ -32,7 +32,7 @@ namespace Permisos.Web.Controllers.Api {
         public async Task<IActionResult> Add([FromBody]PermisoVM vm) {
             try {
                 ValidateRequiredProperties();
-                var entity = await ConvertVMToEntity(vm);
+                var entity = ConvertVMToEntity(vm);
                 entity = await SaveEntityToDb(entity);
 
                 return Created(
@@ -75,7 +75,7 @@ namespace Permisos.Web.Controllers.Api {
             throw new ArgumentException(errorMessage);
         }
 
-        private async Task<Permiso> ConvertVMToEntity(PermisoVM vm) {
+        private Permiso ConvertVMToEntity(PermisoVM vm) {
             var entity = _mapper.Map<Permiso>(vm);
             entity = SetTipoPermisoFromDb(entity);
             
