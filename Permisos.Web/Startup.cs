@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Permisos.Data.Interfaces;
 using Permisos.EF;
+using Permisos.Web.StartupTasks;
 using Permisos.Web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,8 @@ namespace Permisos.Web {
             services.AddSpaStaticFiles(configuration => {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddStartupTask<TipoPermisoStartup>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
