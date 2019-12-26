@@ -16,6 +16,15 @@ namespace Permisos.Tests {
         public void BeforeEach() {
             _mapperStub = new Mock<IMapper>();
             InitializeUnitOfWorkStub();
+
+            //////
+
+            void InitializeUnitOfWorkStub() {
+                _uowStub = new Mock<IUnitOfWork>();
+
+                var repoStub = new Mock<IRepository<TipoPermiso>>();
+                _uowStub.Setup(_ => _.TipoPermisos).Returns(repoStub.Object);
+            }
         }       
 
         [TestMethod]
@@ -32,13 +41,5 @@ namespace Permisos.Tests {
                 "El repositorio no fue ejectudado una sola vez");
         }
 
-        //////
-
-        private void InitializeUnitOfWorkStub() {
-            _uowStub = new Mock<IUnitOfWork>();
-            
-            var repoStub = new Mock<IRepository<TipoPermiso>>();
-            _uowStub.Setup(_ => _.TipoPermisos).Returns(repoStub.Object);
-        }
     }
 }

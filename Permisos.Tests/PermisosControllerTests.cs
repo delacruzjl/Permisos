@@ -24,6 +24,26 @@ namespace Permisos.Tests
 
             InitializeMapper();
             InitializeUnitOfWorkStub();
+
+            //////
+
+            void InitializeMapper() {
+                var config = new MapperConfiguration(cfg => {
+                    cfg.AddProfile(new MappingProfile());
+                });
+
+                _mapper = config.CreateMapper();
+            }
+
+            void InitializeUnitOfWorkStub() {
+                _uowStub = new Mock<IUnitOfWork>();
+
+                var repoPermisoStub = new Mock<IRepository<Permiso>>();
+                _uowStub.Setup(_ => _.Permisos).Returns(repoPermisoStub.Object);
+
+                var repoTipoPermisoStub = new Mock<IRepository<TipoPermiso>>();
+                _uowStub.Setup(_ => _.TipoPermisos).Returns(repoTipoPermisoStub.Object);
+            }
         }
 
         [TestMethod]
@@ -150,25 +170,6 @@ namespace Permisos.Tests
             // assert
             _uowStub.Verify(_ => _.CommitAsync(), Times.Once);
             Assert.IsInstanceOfType(results, typeof(OkResult));
-        }
-
-        //////
-
-        private void InitializeMapper() {
-            var config = new MapperConfiguration(cfg => {
-                cfg.AddProfile(new MappingProfile());
-            });
-
-            _mapper = config.CreateMapper();
-        }
-        private void InitializeUnitOfWorkStub() {
-            _uowStub = new Mock<IUnitOfWork>();
-
-            var repoPermisoStub = new Mock<IRepository<Permiso>>();
-            _uowStub.Setup(_ => _.Permisos).Returns(repoPermisoStub.Object);
-
-            var repoTipoPermisoStub = new Mock<IRepository<TipoPermiso>>();
-            _uowStub.Setup(_ => _.TipoPermisos).Returns(repoTipoPermisoStub.Object);
         }
     }
 }
