@@ -3,6 +3,7 @@ using Permisos.Data.Interfaces;
 using Permisos.Web.StartupTasks.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,11 @@ namespace Permisos.Web.StartupTasks {
         public async Task ExecuteAsync(CancellationToken cancellationToken = default) {
             using var serviceScope = _serviceProvider.CreateScope();
             var uow = serviceScope.ServiceProvider.GetService<IUnitOfWork>();
+
+            if (uow.TipoPermisos.Get().Any()) {
+                return;
+            }
+
             _defaultTipoPermisos.ForEach(tipo => uow.TipoPermisos.Add(
                             new Data.TipoPermiso {
                                 Descripcion = tipo

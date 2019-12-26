@@ -13,16 +13,22 @@ using Permisos.Web.ViewModels;
 
 namespace Permisos.Web {
     public class Startup {
-        public Startup(IConfiguration configuration) {
-            Configuration = configuration;
+        public Startup(IWebHostEnvironment env) {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public static void ConfigureServices(IServiceCollection services) {
+        public void ConfigureServices(IServiceCollection services) {
             AddCors(services);
-            services.AddDbContext<PermisosDb>(opt => opt.UseInMemoryDatabase(nameof(PermisosDb)));
+            services.AddDbContext<PermisosDb>(opt =>
+                opt.UseSqlServer(Configuration[nameof(PermisosDb)], 
+                b => b.MigrationsAssembly(typeof(PermisosDb).Assembly.FullName)));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             AddAutoMapper(services);
 
@@ -32,6 +38,7 @@ namespace Permisos.Web {
                 configuration.RootPath = "ClientApp/dist";
             });
 
+            services.AddStartupTask<DatabaseCreationStartup>();
             services.AddStartupTask<TipoPermisoStartup>();
         }
 
@@ -39,7 +46,7 @@ namespace Permisos.Web {
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
-            } 
+            }
 
             app.UseStaticFiles();
             if (!env.IsDevelopment()) {
