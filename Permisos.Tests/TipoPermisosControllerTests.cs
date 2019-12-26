@@ -40,6 +40,5 @@ namespace Permisos.Tests {
                 Times.Once, 
                 "El repositorio no fue ejectudado una sola vez");
         }
-
     }
 }

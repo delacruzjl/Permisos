@@ -87,7 +87,7 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task AddWhenProvidedInvalidDataShouldReturnBadRequest() {
+        public async Task AddWhenProvidedInvalidTipoPermisoShouldReturnBadRequest() {
             // arrange
             _uowStub.Setup(_ => _.TipoPermisos.Find(It.IsAny<Expression<Func<TipoPermiso, bool>>>()))
                 .Returns(Array.Empty<TipoPermiso>().AsQueryable());
@@ -106,6 +106,25 @@ namespace Permisos.Tests
             // assert
             Assert.IsInstanceOfType(results, typeof(BadRequestObjectResult));
             _uowStub.Verify(_ => _.CommitAsync(), Times.Never);
+        }
+
+        [TestMethod]
+        public async Task AddWhenMissingPropertiesShouldReturnBadRequest() {
+            // arrange
+            var ctrl = new PermisosController(_uowStub.Object, _mapper);
+            var permiso = new PermisoVM {
+                NombreEmpleado = null,
+                ApellidosEmpleado = "abc",
+                TipoPermisoId = -1,
+                FechaPermiso = DateTime.Now
+            };
+
+            // act
+            ctrl.ModelState.AddModelError("NombreEmpleado", "Region is mandatory");
+            var results = await ctrl.Add(permiso);
+
+            // assert
+            Assert.IsInstanceOfType(results, typeof(BadRequestObjectResult));
         }
 
         [TestMethod]
