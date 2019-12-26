@@ -10,6 +10,7 @@ using Permisos.Data.Interfaces;
 using Permisos.EF;
 using Permisos.Web.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Permisos.Web {
@@ -87,12 +88,13 @@ namespace Permisos.Web {
         private static void SeedTipoPermisos(IApplicationBuilder app) {
             using var serviceScope = app.ApplicationServices.CreateScope();
             var uow = serviceScope.ServiceProvider.GetService<IUnitOfWork>();
-            uow.TipoPermisos.Add(new Data.TipoPermiso {
-                Descripcion = "Enfermedad"
-            });
-            uow.TipoPermisos.Add(new Data.TipoPermiso {
-                Descripcion = "Diligencia"
-            });
+
+            new List<string> {
+                "Enfermedad", "Diligencia"
+            }.ForEach(tipo => uow.TipoPermisos.Add(
+                new Data.TipoPermiso {
+                    Descripcion = tipo
+            }));
 
             uow.Commit();
         }
