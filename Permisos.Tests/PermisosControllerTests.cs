@@ -87,6 +87,29 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
+        public async Task AddWhenCouldntCommitShouldReturnBadRequest() {
+            // arrange
+            _uowStub.Setup(_ => _.TipoPermisos.Find(It.IsAny<Expression<Func<TipoPermiso, bool>>>()))
+                .Returns(new[] { new TipoPermiso() }.AsQueryable());
+            _uowStub.Setup(_ => _.CommitAsync())
+                .ReturnsAsync(false);
+
+            var ctrl = new PermisosController(_uowStub.Object, _mapper);
+            var permiso = new PermisoVM {
+                NombreEmpleado = "xyz",
+                ApellidosEmpleado = "abc",
+                TipoPermisoId = 1,
+                FechaPermiso = DateTime.Now
+            };
+
+            // act 
+            var results = await ctrl.Add(permiso);
+
+            // assert
+            Assert.IsInstanceOfType(results, typeof(BadRequestObjectResult));
+        }
+
+        [TestMethod]
         public async Task AddWhenProvidedInvalidTipoPermisoShouldReturnBadRequest() {
             // arrange
             _uowStub.Setup(_ => _.TipoPermisos.Find(It.IsAny<Expression<Func<TipoPermiso, bool>>>()))

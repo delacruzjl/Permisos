@@ -3,14 +3,10 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Permisos.Data.Interfaces;
 using Permisos.Web.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Permisos.Web.Controllers.Api
-{
+namespace Permisos.Web.Controllers.Api {
     [Route("api/[Controller]"), EnableCors("defaultPolicy")]
     public class TipoPermisosController : Controller
     {
