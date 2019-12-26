@@ -10,9 +10,6 @@ using Permisos.Data.Interfaces;
 using Permisos.EF;
 using Permisos.Web.StartupTasks;
 using Permisos.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Permisos.Web {
     public class Startup {
@@ -24,22 +21,10 @@ namespace Permisos.Web {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public static void ConfigureServices(IServiceCollection services) {
-            services.AddCors(options => options.AddPolicy("defaultPolicy", builder => {
-                builder
-                .SetIsOriginAllowed((host) => true)
-                .AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
+            AddCors(services);
             services.AddDbContext<PermisosDb>(opt => opt.UseInMemoryDatabase(nameof(PermisosDb)));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            var config = new MapperConfiguration(cfg => {
-                cfg.AddProfile(new MappingProfile());
-            });
-
-            IMapper mapper = config.CreateMapper();
-            services.AddSingleton(mapper);
+            AddAutoMapper(services);
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
@@ -54,9 +39,7 @@ namespace Permisos.Web {
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
-            } else {
-                app.UseExceptionHandler("/Error");
-            }
+            } 
 
             app.UseStaticFiles();
             if (!env.IsDevelopment()) {
@@ -72,15 +55,32 @@ namespace Permisos.Web {
             });
 
             app.UseSpa(spa => {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
                 spa.Options.SourcePath = "ClientApp";
-
                 if (env.IsDevelopment()) {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+        }
+
+        //////
+
+        private static void AddAutoMapper(IServiceCollection services) {
+            var config = new MapperConfiguration(cfg => {
+                cfg.AddProfile(new MappingProfile());
+            });
+
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
+        }
+
+        private static void AddCors(IServiceCollection services) {
+            services.AddCors(options => options.AddPolicy("defaultPolicy", builder => {
+                builder
+                .SetIsOriginAllowed((host) => true)
+                .AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
         }
     }
 }
