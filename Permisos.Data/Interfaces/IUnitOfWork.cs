@@ -11,6 +11,5 @@ namespace Permisos.Data.Interfaces
         IRepository<TipoPermiso> TipoPermisos { get; }
         IRepository<Permiso> Permisos { get; }
         Task<bool> CommitAsync();
-        bool Commit();
     }
 }

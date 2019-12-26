@@ -45,8 +45,6 @@ namespace Permisos.Web {
             services.AddSpaStaticFiles(configuration => {
                 configuration.RootPath = "ClientApp/dist";
             });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,23 +78,6 @@ namespace Permisos.Web {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-
-
-            SeedTipoPermisos(app);
-        }
-
-        private static void SeedTipoPermisos(IApplicationBuilder app) {
-            using var serviceScope = app.ApplicationServices.CreateScope();
-            var uow = serviceScope.ServiceProvider.GetService<IUnitOfWork>();
-
-            new List<string> {
-                "Enfermedad", "Diligencia"
-            }.ForEach(tipo => uow.TipoPermisos.Add(
-                new Data.TipoPermiso {
-                    Descripcion = tipo
-            }));
-
-            uow.Commit();
         }
     }
 }

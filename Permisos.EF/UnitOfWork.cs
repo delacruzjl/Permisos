@@ -24,11 +24,6 @@ namespace Permisos.EF {
             return results > 0;
         }
 
-        public bool Commit() {
-            var results = _dbContext.SaveChanges();
-            return results > 0;
-        }
-
         public void Dispose() {
             Dispose(!_disposing);
         }
