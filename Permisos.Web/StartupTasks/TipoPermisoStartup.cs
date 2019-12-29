@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Permisos.Web.StartupTasks {
     public class TipoPermisoStartup : IStartupTask {
         private readonly IServiceProvider _serviceProvider;
-        private static List<string> _defaultTipoPermisos = new List<string> {
+        private static readonly List<string> _defaultTipoPermisos = new List<string> {
                 "Enfermedad", "Diligencia"
                 };
 
