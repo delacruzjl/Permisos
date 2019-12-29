@@ -16,13 +16,15 @@ import { ApiService } from './services/api.service';
 import { PermisoService } from './services/permiso.service';
 import { TipoPermisoResolver } from './resolvers/tipo-permiso.resolver';
 import { PermisoResolver } from './resolvers/permiso.resolver';
+import { NotFoundComponent } from './app/not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     SolicitarPermisoComponent,
-    VerPermisosComponent
+    VerPermisosComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserAnimationsModule,

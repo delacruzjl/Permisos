@@ -3,6 +3,7 @@ import { SolicitarPermisoComponent } from './solicitar-permiso/solicitar-permiso
 import { VerPermisosComponent } from './ver-permisos/ver-permisos.component';
 import { TipoPermisoResolver } from './resolvers/tipo-permiso.resolver';
 import { PermisoResolver } from './resolvers/permiso.resolver';
+import { NotFoundComponent } from './app/not-found/not-found.component';
 
 export const appRoutes: Route[] = [
   {
@@ -16,5 +17,7 @@ export const appRoutes: Route[] = [
     component: SolicitarPermisoComponent,
     pathMatch: 'full',
     resolve: { tipoPermisos: TipoPermisoResolver }
-  }
+  },
+  { path: '404', component: NotFoundComponent },
+  { path: '**', redirectTo: '/404', pathMatch: 'full' }
 ];
