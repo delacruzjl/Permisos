@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Permisos.Data;
 using Permisos.Data.Interfaces;
 using Permisos.Web.ViewModels;
@@ -35,15 +34,14 @@ namespace Permisos.Web.Controllers.Api {
                 var entity = ConvertVMToEntity(vm);
                 entity = await SaveEntityToDb(entity);
 
-                return Created(
-                    new Uri($"{Request?.Path}/{entity.Id}", UriKind.Relative),
+                var createdPermisoUrl = $"{Request?.Path}/{entity.Id}";
+                return base.Created(
+                    new Uri(createdPermisoUrl, UriKind.Relative),
                     _mapper.Map<PermisoVM>(entity));
             } catch (ArgumentException) {
                 return BadRequest(ModelState);
             }
         }
-
-       
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remove(int id) {
