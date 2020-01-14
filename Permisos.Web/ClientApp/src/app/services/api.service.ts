@@ -63,7 +63,7 @@ export class ApiService {
     const body = res;
 
     const error = {
-      statusCode: statusCode,
+      statusCode,
       error: body['error']
     };
 
