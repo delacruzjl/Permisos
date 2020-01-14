@@ -4,12 +4,15 @@ using Permisos.EF.Repositories;
 using System;
 using System.Threading.Tasks;
 
-namespace Permisos.EF {
-    public class UnitOfWork : IUnitOfWork {
+namespace Permisos.EF
+{
+    public class UnitOfWork : IUnitOfWork
+    {
         private readonly PermisosDb _dbContext;
-        private bool _disposing;
+        private bool _disposed = false;
 
-        public UnitOfWork(PermisosDb dbContext) {
+        public UnitOfWork(PermisosDb dbContext)
+        {
             _dbContext = dbContext;
         }
 
@@ -19,26 +22,35 @@ namespace Permisos.EF {
         public IRepository<Permiso> Permisos =>
             MakeRepository<Permiso>();
 
-        public async Task<bool> CommitAsync() {
+        public async Task<bool> CommitAsync()
+        {
             var results = await _dbContext.SaveChangesAsync();
             return results > 0;
         }
 
-        public void Dispose() {
-            Dispose(!_disposing);
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing) {
-            if (!disposing) {
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
                 return;
             }
 
-            _disposing = true;
-            GC.SuppressFinalize(this);
-            _dbContext.Dispose();
+            if (disposing)
+            {
+                _dbContext.Dispose();
+            }
+
+            _disposed = true;
         }
 
-        private IRepository<T> MakeRepository<T>() where T : class {
+        private IRepository<T> MakeRepository<T>() where T : class
+        {
             return new RepositoryBase<T>(_dbContext);
         }
     }
