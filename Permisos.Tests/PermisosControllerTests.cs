@@ -51,7 +51,7 @@ namespace Permisos.Tests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void GetWhenExecutedShouldCallTipoPermisoRepo()
         {
             // arrange

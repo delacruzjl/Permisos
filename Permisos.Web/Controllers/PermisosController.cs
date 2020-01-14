@@ -27,15 +27,10 @@ namespace Permisos.Web.Controllers.Api
         [HttpGet]
         public IEnumerable<PermisoVM> Get()
         {
-            var results = _uow.Permisos.Get()
+          
+            return  _uow.Permisos.Get()
                 .Include(_ => _.TipoPermiso)
                 .Select(_mapper.Map<PermisoVM>);
-
-            PermisoVM test = null;
-
-            test.ApellidosEmpleado = "Test for SonarQube";
-
-            return results.Concat(new[] { test });
         }
 
         [HttpPost]
