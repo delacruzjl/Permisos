@@ -5,6 +5,9 @@ using Permisos.Web.StartupTasks;
 
 namespace Permisos.Web {
     public sealed class Program {
+        private Program() {
+        }
+
         public static async Task Main(string[] args) {
             await CreateHostBuilder(args)
                 .Build()

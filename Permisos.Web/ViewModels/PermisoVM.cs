@@ -1,13 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Permisos.Web.ViewModels
-{
+namespace Permisos.Web.ViewModels {
     public class PermisoVM
     {
         public int Id { get; set; }

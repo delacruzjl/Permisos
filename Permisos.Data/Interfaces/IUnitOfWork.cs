@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Permisos.Data.Interfaces
-{
+namespace Permisos.Data.Interfaces {
     public interface IUnitOfWork : IDisposable
     {
         IRepository<TipoPermiso> TipoPermisos { get; }
