@@ -4,7 +4,6 @@ using Moq;
 using Permisos.Data;
 using Permisos.Data.Interfaces;
 using Permisos.Web.Controllers.Api;
-using System;
 
 namespace Permisos.Tests {
     [TestClass]
@@ -33,7 +32,7 @@ namespace Permisos.Tests {
             var ctrl = new TipoPermisosController(_uowStub.Object, _mapperStub.Object);
 
             // act
-            var results = ctrl.Get();
+            ctrl.Get();
 
             // assert
             _uowStub.Verify(_ => _.TipoPermisos.Get(), 
