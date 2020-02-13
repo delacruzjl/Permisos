@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h2 class="title">Listado de permisos</h2>
-
+    <PageHeader title="Listado de permisos" />
     <div class="columns is-multiline" v-if="permisos && permisos.length > 0">
       <div
         class="column is-one-quarter"
@@ -10,8 +9,7 @@
       >
         <div
           class="card"
-          :class="{ 'has-background-grey-light': permiso.loading }"
-        >
+          :class="{ 'has-background-grey-light': permiso.loading }">
           <header class="card-header">
             <p class="card-header-title">
               {{ permiso.nombreEmpleado }} {{ permiso.apellidosEmpleado }}
@@ -39,19 +37,25 @@
       </div>
     </div>
 
-    <div
-      class="notification is-warning"
+    <AlertMessage
+      message="No hay permisos que mostrar en este momento"
+      messageType="warning"
+      hide-delete="true"
       v-if="!permisos || permisos.length === 0"
-    >
-      <button class="delete"></button>
-      No hay permisos que mostrar en este momento
-    </div>
+    />
   </div>
 </template>
 
 <script>
 import { dataService } from '../shared';
+import PageHeader from '@/components/common/page-header';
+import AlertMessage from '@/components/common/alert-message';
+
 export default {
+  components: {
+    PageHeader,
+    AlertMessage
+  },
   methods: {
     async remove(permiso) {
       this.permisos = this.permisos.map(p => {
