@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,19 +36,18 @@ namespace Permisos.Web
                 opt.UseSqlServer(Configuration[nameof(PermisosDb)],
                 b => b.MigrationsAssembly(typeof(PermisosDb).Assembly.FullName)));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            AddAutoMapper(services);
-
-            services.AddControllersWithViews();
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
-
             services.AddStartupTask<DatabaseCreationStartup>();
             services.AddStartupTask<TipoPermisoStartup>();
+            AddAutoMapper(services);
+
+            services
+                .AddMvc(opt => opt.EnableEndpointRouting = false)
+                .AddJsonOptions(opt => {
+                    opt.JsonSerializerOptions.IgnoreNullValues = true;
+                });
+            
             services.AddSwaggerGen(c =>
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" }));
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Permisos API", Version = "v1" }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,35 +59,13 @@ namespace Permisos.Web
                 
             }
 
-            app.UseStaticFiles();
-            if (!env.IsDevelopment())
-            {
-                app.UseSpaStaticFiles();
-            }
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
 
             app.UseRouting();
             app.UseCors("defaultPolicy");
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });
-
-
+            app.UseMvc();
         }
 
         //////
@@ -112,8 +88,8 @@ namespace Permisos.Web
                 builder
                 .SetIsOriginAllowed((host) => true)
                 .AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
+                .AllowAnyMethod()
+                .AllowAnyHeader();
             }));
         }
     }
