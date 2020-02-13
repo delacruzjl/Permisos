@@ -3,19 +3,17 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Permisos.UITests.Pages;
 using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace Permisos.UITests {
     [TestClass]
     public class SolicitudPermisosTests {
         private IWebDriver _driver;
-        private string _appURL;
-
         [TestInitialize()]
         public void BeforeEach() {
-            _appURL = "http://localhost:5000/";
-            SetupSeleniumDriver("Chrome");
-            _driver.Navigate().GoToUrl(_appURL);
+            _driver = _driver.SetupForBrowser("Chrome");
+            _driver.Navigate().GoToUrl(Constants.APP_URL);
         }
 
         [TestCleanup()]
@@ -36,22 +34,43 @@ namespace Permisos.UITests {
         }
 
         [TestMethod, TestCategory("Chrome")]
+        public void IfISendEmptySpacesShouldNOTEnableSubmit() {
+            // arrange          
+            var webPage = new SolicitarPermisoWebPage(_driver);
+
+            // act
+            webPage.NombresInput.SendKeys(" ");
+            webPage.ApellidosInput.SendKeys(LoremNET.Lorem.Words(2));
+            webPage.FechaInput.Clear();
+            webPage.FechaInput.SendKeys(LoremNET.Lorem.DateTime().ToString("MM/dd/yyyy"));
+            webPage.TipoDePermisoSelect.SelectByIndex(LoremNET.Lorem.Random(new[] { 1, 2 }));
+
+            // assert
+            Assert.IsFalse(webPage.SolicitarPermisoButton.Enabled);
+        }
+
+        [TestMethod, TestCategory("Chrome")]
         public void AfterSavingSolicitudItShowsTheListOfPermisos() {
             // arrange          
             var webPage = new SolicitarPermisoWebPage(_driver);
 
             // act
-            webPage.NombresInput.SendKeys(nameof(SolicitudPermisosTests));
-            webPage.ApellidosInput.SendKeys(nameof(SolicitudPermisosTests));
+            webPage.NombresInput.SendKeys(LoremNET.Lorem.Words(2));
+            webPage.ApellidosInput.SendKeys(LoremNET.Lorem.Words(2));
             webPage.FechaInput.Clear();
-            webPage.FechaInput.SendKeys("1/25/2020");
-            webPage.TipoDePermisoSelect.SelectByIndex(1);
+            webPage.FechaInput.SendKeys(LoremNET.Lorem.DateTime().ToString("MM/dd/yyyy"));
+            webPage.TipoDePermisoSelect.SelectByIndex(LoremNET.Lorem.Random(new[] {1, 2 }));
+
+            if (!webPage.SolicitarPermisoButton.Enabled) {
+                Assert.Fail("Invalid data was entered, the submit button was not enabled and nothing was created");
+            }
+
             webPage.SolicitarPermisoButton.Submit();
 
             // assert
             for (var second = 0; ; second++) {
-                if (second >= 2) {
-                    Assert.Fail("timeout");
+                if (second >= Constants.MINIMUM_DELAY) {
+                    Assert.Fail($"timeout! took more than {Constants.MINIMUM_DELAY} seconds to load");
                 }
 
                 try {
@@ -66,16 +85,6 @@ namespace Permisos.UITests {
             }
 
             Assert.IsTrue(_driver.Url.EndsWith("/ver"));
-        }       
-
-        //////
-
-        private void SetupSeleniumDriver(string browser) {
-            _driver = browser switch
-            {
-                "Chrome" => new ChromeDriver(),
-                _ => new ChromeDriver(),
-            };
         }
     }
 }

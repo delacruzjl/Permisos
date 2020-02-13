@@ -1,5 +1,7 @@
 <template>
   <div>
+    <h2 class="title">Listado de permisos</h2>
+
     <div class="columns is-multiline" v-if="permisos && permisos.length > 0">
       <div
         class="column is-one-quarter"

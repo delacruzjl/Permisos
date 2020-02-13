@@ -1,8 +1,8 @@
 // @ts-nocheck
 import * as axios from 'axios';
-import { parseISO, format } from 'date-fns';
+import moment from 'moment';
 
-const inputDateFormat = 'yyyy-MM-dd';
+const inputDateFormat = 'YYYY-MM-DD';
 const API = process.env.VUE_APP_API;
 
 const getTipoPermisos = async function() {
@@ -20,8 +20,8 @@ const getPermisos = async function() {
   try {
     const response = await axios.get(`${API}/permisos`);
     let data = parseList(response);
-    data = data.map(p => {
-      p.fechaPermiso = format(parseISO(p.fechaPermiso), inputDateFormat);
+      data = data.map(p => {
+          p.fechaPermiso = moment(p.fechaPermiso, inputDateFormat).toISOString();
       return p;
     });
     return data;
@@ -41,8 +41,7 @@ const addPermiso = async function(permiso) {
     let data = response.data;
     return data;
   } catch (error) {
-    window.console.error(error);
-    return permiso;
+      throw error;
   }
 };
 

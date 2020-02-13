@@ -5,7 +5,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // target host
+            target: 'http://localhost:55282', // target host
         ws: true, // proxy websockets
         changeOrigin: true // needed for virtual hosted sites
       }
