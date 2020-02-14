@@ -39,8 +39,13 @@ export default {
     remove() {
       this.deleting = true;
       this.$emit('remove-item', this.item);
-      this.deleting = undefined;
     }
   }
 };
 </script>
+
+<style scoped>
+button {
+  cursor: pointer;
+}
+</style>
