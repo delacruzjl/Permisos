@@ -6,60 +6,42 @@ const inputDateFormat = 'YYYY-MM-DD';
 const API = process.env.VUE_APP_API;
 
 const getTipoPermisos = async function() {
-  try {
-    const response = await axios.get(`${API}/tipopermisos`);
-    let data = parseList(response);
-    return data;
-  } catch (error) {
-    window.console.error(error);
-    return [];
-  }
+  const response = await axios.get(`${API}/tipopermisos`);
+  let data = parseList(response);
+  return data;
 };
 
 const getPermisos = async function() {
-  try {
-    const response = await axios.get(`${API}/permisos`);
-    let data = parseList(response);
-      data = data.map(p => {
-          p.fechaPermiso = moment(p.fechaPermiso, inputDateFormat).toISOString();
-      return p;
-    });
-    return data;
-  } catch (error) {
-    window.console.error(error);
-    return [];
-  }
+  const response = await axios.get(`${API}/permisos`);
+  let data = parseList(response);
+  data = data.map(p => {
+    p.fechaPermiso = moment(p.fechaPermiso, inputDateFormat).toISOString();
+    return p;
+  });
+
+  return data;
 };
 
 const addPermiso = async function(permiso) {
-  try {
-    const response = await axios.post(`${API}/permisos`, permiso);
-    if (response.status !== 201) {
-      throw Error(response.message);
-    }
-
-    let data = response.data;
-    return data;
-  } catch (error) {
-      throw error;
+  const response = await axios.post(`${API}/permisos`, permiso);
+  if (response.status !== 201) {
+    throw new Error(response.message);
   }
+
+  let data = response.data;
+  return data;
 };
 
 const removePermiso = async function(permisoId) {
-  try {
-    const response = await axios.delete(`${API}/permisos/${permisoId}`);
-    if (response.status !== 200) {
-      throw Error(response.message);
-    }
-    return true;
-  } catch (error) {
-    window.console.error(error);
-    return false;
+  const response = await axios.delete(`${API}/permisos/${permisoId}`);
+  if (response.status !== 200) {
+    throw new Error(response.message);
   }
+  return true;
 };
 
 const parseList = response => {
-  if (response.status !== 200) throw Error(response.message);
+  if (response.status !== 200) throw new Error(response.message);
   if (!response.data) return [];
   let list = response.data;
   if (typeof list !== 'object') {

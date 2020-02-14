@@ -8,10 +8,10 @@
     />
 
     <AlertMessage
-      message="No hay permisos que mostrar en este momento"
-      messageType="warning"
+      :message="message"
+      :messageType="hasErrors ? 'danger' : 'warning'"
       hide-delete="true"
-      v-if="doneLoading && (!permisos || permisos.length === 0)"
+      v-if="(doneLoading && (!permisos || permisos.length === 0)) || hasErrors"
     />
   </div>
 </template>
@@ -30,21 +30,39 @@ export default {
   },
   methods: {
     async remove(permiso) {
-      var response = await dataService.removePermiso(permiso.id);
-      if (response === true) {
-        this.permisos = this.permisos.filter(p => p.id !== permiso.id);
+      var response = await dataService
+        .removePermiso(permiso.id)
+        .catch(reason => new Error(reason));
+      if (response !== true) {
+        this.hasErrors = true;
+        this.message = response.message;
+        return;
       }
+
+      this.permisos = this.permisos.filter(p => p.id !== permiso.id);
     }
   },
   data() {
     return {
-      permisos: undefined,
-      doneLoading: undefined
+      permisos: [],
+      doneLoading: undefined,
+      message: 'No hay permisos que mostrar en este momento',
+      hasErrors: undefined
     };
   },
   async created() {
-    this.permisos = await dataService.getPermisos();
+    const result = await dataService
+      .getPermisos()
+      .catch(reason => new Error(reason));
     this.doneLoading = true;
+
+    if (result instanceof Error) {
+      this.hasErrors = true;
+      this.message = result.message;
+      return;
+    }
+
+    this.permisos = result;
   }
 };
 </script>

@@ -52,15 +52,17 @@ export default {
       this.hasErrors = undefined;
       this.message = undefined;
       this.loading = true;
-      try {
-        await dataService.addPermiso(permiso);
-        this.$router.push({ name: 'ver' });
-      } catch (error) {
+      const result = await dataService
+        .addPermiso(permiso)
+        .catch(reason => new Error(reason));
+      this.loading = false;
+      if (result instanceof Error) {
         this.hasErrors = true;
-        this.message = error;
+        this.message = result.message;
+        return;
       }
 
-      this.loading = false;
+      this.$router.push({ name: 'ver' });
     }
   }
 };
