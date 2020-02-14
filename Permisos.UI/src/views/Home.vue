@@ -9,14 +9,9 @@
       />
 
       <AlertMessage
-        message="Estamos procesando su solicitud, espere un momento por favor..."
-        messageType="info"
-        v-if="loading"
-      />
-      <AlertMessage
         :message="message"
-        messageType="danger"
-        v-if="!loading && hasErrors"
+        :messageType="hasErrors ? 'danger' : 'info'"
+        v-if="loading || (!loading && hasErrors)"
       />
     </div>
   </div>
@@ -47,7 +42,8 @@ export default {
       dateFormat: DATE_FORMAT,
       tipoPermisos: [],
       loading: undefined,
-      message: undefined,
+      message:
+        'Estamos procesando su solicitud, espere un momento por favor...',
       hasErrors: undefined
     };
   },
