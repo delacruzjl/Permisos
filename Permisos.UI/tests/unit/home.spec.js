@@ -1,9 +1,11 @@
-import { createLocalVue, mount } from '@vue/test-utils';
-import VueRouter from 'vue-router'
-import Home from './../../src/views/Home';
-import { dataService } from '../../src/shared';
 import * as chai from 'chai';
 import sinon from 'sinon';
+
+import { createLocalVue, mount } from '@vue/test-utils';
+import VueRouter from 'vue-router';
+
+import { dataService } from '../../src/shared';
+import Home from './../../src/views/Home';
 
 const svcMock = sinon.mock(dataService);
 

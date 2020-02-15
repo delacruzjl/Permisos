@@ -23,6 +23,7 @@ import AlertMessage from '@/components/common/alert-message';
 import PermisoList from '@/components/permiso-viewer/permiso-list';
 
 export default {
+  name: 'NamePage',
   components: {
     PageHeader,
     AlertMessage,
