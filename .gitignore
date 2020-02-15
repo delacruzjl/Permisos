@@ -15,3 +15,5 @@ bin/
 **/node_modules/
 TestResults/
 **/TestResults/
+coverage/
+.nyc_output/

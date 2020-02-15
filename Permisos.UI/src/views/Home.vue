@@ -35,7 +35,7 @@ export default {
     AlertMessage
   },
   async created() {
-    this.tipoPermisos = await dataService.getTipoPermisos();
+    await this.retrieveTipoPermisos();
   },
   data() {
     return {
@@ -48,6 +48,19 @@ export default {
     };
   },
   methods: {
+    async retrieveTipoPermisos() {
+      const result = await dataService
+        .getTipoPermisos()
+        .catch(reason => new Error(reason));
+
+      if (result instanceof Error) {
+        this.hasErrors = true;
+        this.message = result.message;
+        return;
+      }
+
+      this.tipoPermisos = result;
+    },
     async ok(permiso) {
       this.hasErrors = undefined;
       this.message = undefined;
