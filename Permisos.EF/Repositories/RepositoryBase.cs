@@ -63,8 +63,9 @@ namespace Permisos.EF.Repositories
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
+            if (_disposed) {
                 return;
+            }
 
             if (disposing)
             {

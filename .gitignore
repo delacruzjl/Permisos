@@ -1,6 +1,6 @@
 .vs/
 **/.vs/
-.vscode/
+
 **/.vscode/
 *._BACKUP*
 *.orig
@@ -15,3 +15,5 @@ bin/
 **/node_modules/
 TestResults/
 **/TestResults/
+coverage/
+.nyc_output/
