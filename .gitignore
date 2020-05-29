@@ -17,3 +17,4 @@ TestResults/
 **/TestResults/
 coverage/
 .nyc_output/
+**/*_1232.csproj
