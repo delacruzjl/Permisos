@@ -15,27 +15,32 @@ using System.Threading.Tasks;
 namespace Permisos.Tests
 {
     [TestClass]
-    public class PermisosControllerTests {
+    public class PermisosControllerTests
+    {
         private Mock<IUnitOfWork> _uowStub;
         private IMapper _mapper;
 
         [TestInitialize]
-        public void BeforeEach() {
+        public void BeforeEach()
+        {
 
             InitializeMapper();
             InitializeUnitOfWorkStub();
 
             //////
 
-            void InitializeMapper() {
-                var config = new MapperConfiguration(cfg => {
+            void InitializeMapper()
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
                     cfg.AddProfile(new MappingProfile());
                 });
 
                 _mapper = config.CreateMapper();
             }
 
-            void InitializeUnitOfWorkStub() {
+            void InitializeUnitOfWorkStub()
+            {
                 _uowStub = new Mock<IUnitOfWork>();
 
                 var repoPermisoStub = new Mock<IRepository<Permiso>>();
@@ -47,7 +52,8 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public void GetWhenExecutedShouldCallTipoPermisoRepo() {
+        public void GetWhenExecutedShouldCallTipoPermisoRepo()
+        {
             // arrange
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
 
@@ -63,7 +69,8 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task AddWhenProvidedCorrectInfoShouldAddPermiso() {
+        public async Task AddWhenProvidedCorrectInfoShouldAddPermiso()
+        {
             // arrange
             _uowStub.Setup(_ => _.TipoPermisos.Find(It.IsAny<Expression<Func<TipoPermiso, bool>>>()))
                 .Returns(new[] { new TipoPermiso() }.AsQueryable());
@@ -71,15 +78,16 @@ namespace Permisos.Tests
                 .ReturnsAsync(true);
 
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
-            var permiso = new PermisoVM {
-                 NombreEmpleado = "xyz",
+            var permiso = new PermisoVM
+            {
+                NombreEmpleado = "xyz",
                 ApellidosEmpleado = "abc",
-                 TipoPermisoId =  1,
+                TipoPermisoId = 1,
                 FechaPermiso = DateTime.Now
             };
 
             // act 
-           var results = await ctrl.Add(permiso);
+            var results = await ctrl.Add(permiso);
 
             // assert
             Assert.IsInstanceOfType(results, typeof(CreatedResult));
@@ -87,7 +95,8 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task AddWhenCouldntCommitShouldReturnBadRequest() {
+        public async Task AddWhenCouldntCommitShouldReturnBadRequest()
+        {
             // arrange
             _uowStub.Setup(_ => _.TipoPermisos.Find(It.IsAny<Expression<Func<TipoPermiso, bool>>>()))
                 .Returns(new[] { new TipoPermiso() }.AsQueryable());
@@ -95,7 +104,8 @@ namespace Permisos.Tests
                 .ReturnsAsync(false);
 
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
-            var permiso = new PermisoVM {
+            var permiso = new PermisoVM
+            {
                 NombreEmpleado = "xyz",
                 ApellidosEmpleado = "abc",
                 TipoPermisoId = 1,
@@ -110,13 +120,15 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task AddWhenProvidedInvalidTipoPermisoShouldReturnBadRequest() {
+        public async Task AddWhenProvidedInvalidTipoPermisoShouldReturnBadRequest()
+        {
             // arrange
             _uowStub.Setup(_ => _.TipoPermisos.Find(It.IsAny<Expression<Func<TipoPermiso, bool>>>()))
                 .Returns(Array.Empty<TipoPermiso>().AsQueryable());
 
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
-            var permiso = new PermisoVM {
+            var permiso = new PermisoVM
+            {
                 NombreEmpleado = "xyz",
                 ApellidosEmpleado = "abc",
                 TipoPermisoId = -1,
@@ -132,10 +144,12 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task AddWhenMissingPropertiesShouldReturnBadRequest() {
+        public async Task AddWhenMissingPropertiesShouldReturnBadRequest()
+        {
             // arrange
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
-            var permiso = new PermisoVM {
+            var permiso = new PermisoVM
+            {
                 NombreEmpleado = null,
                 ApellidosEmpleado = "abc",
                 TipoPermisoId = -1,
@@ -151,7 +165,8 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task RemoveWhenIdNotProvidedShouldReturnBadRequest() {
+        public async Task RemoveWhenIdNotProvidedShouldReturnBadRequest()
+        {
             // arrange
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
             var fakeId = 0;
@@ -164,7 +179,8 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task RemoveWhenPermisoNotFoundShouldReturnBadRequest() {
+        public async Task RemoveWhenPermisoNotFoundShouldReturnBadRequest()
+        {
             // arrange
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
             var fakeId = 999;
@@ -179,12 +195,13 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task RemoveWhenIdFoundShouldCallRemoveFromRepo() {
+        public async Task RemoveWhenIdFoundShouldCallRemoveFromRepo()
+        {
             // arrange
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
             var fakeId = 999;
             _uowStub.Setup(_ => _.Permisos.Find(It.IsAny<Expression<Func<Permiso, bool>>>()))
-               .Returns(new[] {new Permiso() }.AsQueryable());
+               .Returns(new[] { new Permiso() }.AsQueryable());
             _uowStub.Setup(_ => _.CommitAsync())
                 .ReturnsAsync(true);
 
@@ -197,7 +214,8 @@ namespace Permisos.Tests
         }
 
         [TestMethod]
-        public async Task RemoveWhenIdFoundShouldCallCommit() {
+        public async Task RemoveWhenIdFoundShouldCallCommit()
+        {
             // arrange
             var ctrl = new PermisosController(_uowStub.Object, _mapper);
             var fakeId = 999;
