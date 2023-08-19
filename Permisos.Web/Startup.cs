@@ -44,7 +44,9 @@ namespace Permisos.Web
       AddAutoMapper (services);
 
       services
-        .AddMvc(opt => opt.EnableEndpointRouting = false)
+        .AddMvc(opt => { 
+            opt.EnableEndpointRouting = false;
+        })
         .AddJsonOptions(opt =>
         {
           opt.JsonSerializerOptions.IgnoreNullValues = true;
