@@ -5,7 +5,7 @@
     <ProjectGuid>{EF0387A9-6C1D-460B-B3FD-45BD92E1F3E9}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="Moq" Version="4.14.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
